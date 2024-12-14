@@ -1,31 +1,30 @@
 ---
-- name: Uninstall Notepad++
+- name: Uninstall Notepad++ silently
   hosts: all
   tasks:
-    - name: Check if Notepad++ is installed
+    - name: Check if Notepad++ uninstall file exists
       win_shell: |
-        if (Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | Where-Object { $_.DisplayName -like "Notepad++" }) {
-          Write-Output "installed"
+        if (Test-Path "C:\Program Files\Notepad++\uninstall.exe") {
+          Write-Output "uninstall available"
         } else {
-          Write-Output "not installed"
+          Write-Output "uninstall not available"
         }
-      register: notepadpp_status
+      register: uninstall_status
       changed_when: no
 
-    - name: Debug installation status
+    - name: Debug uninstall file status
       debug:
-        msg: "Notepad++ installation status: {{ notepadpp_status.stdout | trim }}"
+        msg: "Uninstall file status: {{ uninstall_status.stdout | trim }}"
 
-    - name: Uninstall Notepad++
+    - name: Run Notepad++ uninstaller in silent mode
       win_shell: |
-        $app = Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | Where-Object { $_.DisplayName -like "Notepad++" }
-        & $app.UninstallString /S
+        Start-Process -FilePath "C:\Program Files\Notepad++\uninstall.exe" -ArgumentList "/S" -Wait
       args:
         executable: powershell
-      when: notepadpp_status.stdout | trim == "installed"
+      when: uninstall_status.stdout | trim == "uninstall available"
 
     - name: Remove leftover Notepad++ files
       win_file:
         path: "C:\\Program Files\\Notepad++"
         state: absent
-      when: notepadpp_status.stdout | trim == "installed"
+      when: uninstall_status.stdout | trim == "uninstall available"
