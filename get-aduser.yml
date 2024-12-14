@@ -13,6 +13,8 @@
     - name: Get AD User with PowerShell
       ansible.builtin.win_shell: Get-ADUser -Identity "{{ identity }}" -Properties *
       register: ad_user_output
+      args:
+        executable: powershell
 
     - name: Show AD User details
       ansible.builtin.debug:
