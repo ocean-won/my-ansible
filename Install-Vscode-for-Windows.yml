@@ -1,6 +1,6 @@
 ---
 - name: Install Visual Studio Code
-  hosts: windows
+  hosts: all
   tasks:
     - name: Check if Visual Studio Code is already installed
       win_shell: |
