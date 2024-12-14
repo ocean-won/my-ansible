@@ -1,0 +1,31 @@
+---
+- name: Uninstall Notepad++
+  hosts: all
+  tasks:
+    - name: Check if Notepad++ is installed
+      win_shell: |
+        if (Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | Where-Object { $_.DisplayName -like "Notepad++" }) {
+          Write-Output "installed"
+        } else {
+          Write-Output "not installed"
+        }
+      register: notepadpp_status
+      changed_when: no
+
+    - name: Debug installation status
+      debug:
+        msg: "Notepad++ installation status: {{ notepadpp_status.stdout | trim }}"
+
+    - name: Uninstall Notepad++
+      win_shell: |
+        $app = Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | Where-Object { $_.DisplayName -like "Notepad++" }
+        & $app.UninstallString /S
+      args:
+        executable: powershell
+      when: notepadpp_status.stdout | trim == "installed"
+
+    - name: Remove leftover Notepad++ files
+      win_file:
+        path: "C:\\Program Files\\Notepad++"
+        state: absent
+      when: notepadpp_status.stdout | trim == "installed"
