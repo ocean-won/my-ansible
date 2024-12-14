@@ -11,7 +11,7 @@
         export AWS_ACCESS_KEY_ID="{{ AccessKey }}"
         export AWS_SECRET_ACCESS_KEY="{{ SecretKey }}"
         export AWS_DEFAULT_REGION="{{ Region }}"
-        aws ec2 describe-vpcs --query "Vpcs[]" --output table
+        /snap/bin/aws ec2 describe-vpcs --query "Vpcs[]" --output json
       register: vpc_list
       changed_when: no
 
