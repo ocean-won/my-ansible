@@ -1,11 +1,11 @@
 ---
-- name: Check installed collections
+- name: List installed collections
   hosts: localhost
   tasks:
-    - name: List installed collections
-      ansible.builtin.command: ansible-galaxy collection list
-      register: collection_list
+    - name: Find collections
+      ansible.builtin.command: find ~/.ansible/collections/ansible_collections -type d -maxdepth 2
+      register: collections
 
-    - name: Display collections
+    - name: Show collections
       debug:
-        msg: "{{ collection_list.stdout }}"
+        msg: "{{ collections.stdout_lines }}"
