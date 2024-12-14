@@ -1,0 +1,20 @@
+---
+- name: Get AD User from Identity Survey
+  hosts: windows
+  gather_facts: no
+  vars:
+    # Survey에서 입력받은 값을 Playbook에서 사용할 변수로 정의
+    identity: "{{ survey_identity }}"
+  tasks:
+    - name: Validate the Identity input
+      ansible.builtin.debug:
+        msg: "{{ identity }}"
+
+    - name: Get AD User with PowerShell
+      ansible.windows.win_shell: |
+        Get-ADUser -Identity "{{ identity }} -Properties *"
+      register: ad_user_output
+
+    - name: Show AD User details
+      ansible.builtin.debug:
+        msg: "{{ ad_user_output.stdout_lines }}"
