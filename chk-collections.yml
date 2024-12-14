@@ -1,0 +1,11 @@
+---
+- name: Check installed collections
+  hosts: localhost
+  tasks:
+    - name: List installed collections
+      ansible.builtin.command: ansible-galaxy collection list
+      register: collection_list
+
+    - name: Display collections
+      debug:
+        msg: "{{ collection_list.stdout }}"
