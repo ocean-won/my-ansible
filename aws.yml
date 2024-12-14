@@ -1,12 +1,17 @@
 - name: List S3 buckets using AWS CLI
   hosts: 10.88.88.103
+  gather_facts: no
   become: yes
+  vars:
+    AccessKey: "{{ survey_AccessKey }}"
+    SecretKey: "{{ survey_SecretKey }}"
+    Region: "{{ survey_Region }}"
   tasks:
     - name: Set AWS CLI environment variables
       ansible.builtin.shell: |
-        export AWS_ACCESS_KEY_ID="{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        export AWS_SECRET_ACCESS_KEY="{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-        export AWS_DEFAULT_REGION="ap-northeast-2"
+        export AWS_ACCESS_KEY_ID="{{ AccessKey }}"
+        export AWS_SECRET_ACCESS_KEY="{{ SecretKey }}"
+        export AWS_DEFAULT_REGION="{{ Region }}"
         aws s3 ls
       register: s3_bucket_list
       changed_when: no
