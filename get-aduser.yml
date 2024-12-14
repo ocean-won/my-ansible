@@ -1,6 +1,6 @@
 ---
 - name: Get AD User from Identity Survey
-  hosts: windows
+  hosts: all
   gather_facts: no
   vars:
     # Survey에서 입력받은 값을 Playbook에서 사용할 변수로 정의
