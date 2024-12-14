@@ -4,9 +4,10 @@
   gather_facts: false
   tasks:
     - name: Get-Timezone
-      ansible.builtin.win_powershell:
-        script: Get-Timezone
+      ansible.builtin.powershell:
+        script: |
+          Get-Timezone
       register: timezone
-    - name: Print uname output
+    - name: Print timezone output
       debug:
         msg: "{{ timezone.stdout }}"
