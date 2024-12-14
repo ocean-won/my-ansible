@@ -1,0 +1,11 @@
+---
+- name: Get-Timezone
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Get-Timezone
+      ansible.builtin.win_command: Get-Timezone
+      register: timezone
+    - name: Print uname output
+      debug:
+        msg: "{{ timezone.stdout }}"
