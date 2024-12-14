@@ -17,3 +17,4 @@
     - name: Show AD User details
       ansible.builtin.debug:
         msg: "{{ ad_user_output.stdout_lines }}"
+        verbosity: 0
