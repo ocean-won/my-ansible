@@ -14,23 +14,23 @@
 
     - name: Debug installation status
       debug:
-        msg: "Notepad++ installation status: {{ notepadpp_status.stdout }}"
+        msg: "Notepad++ installation status: {{ notepadpp_status.stdout | trim }}"
 
     - name: Copy Notepad++ installer to Windows server
       win_copy:
-        src: "files/npp.8.7.4.Installer.x64.exe"
+        src: "files/npp.8.7.4.Installer.x64.exe"  # 프로젝트 경로 기준
         dest: "C:\\Temp\\npp.8.7.4.Installer.x64.exe"
-      when: notepadpp_status.stdout == "not installed"
+      when: notepadpp_status.stdout | trim == "not installed"
 
     - name: Install Notepad++
       win_shell: |
         Start-Process -FilePath "C:\Temp\npp.8.7.4.Installer.x64.exe" -ArgumentList "/S" -Wait
       args:
         executable: powershell
-      when: notepadpp_status.stdout == "not installed"
+      when: notepadpp_status.stdout | trim == "not installed"
 
     - name: Remove installer after installation
       win_file:
         path: "C:\\Temp\\npp.8.7.4.Installer.x64.exe"
         state: absent
-      when: notepadpp_status.stdout == "not installed"
+      when: notepadpp_status.stdout | trim == "not installed"
