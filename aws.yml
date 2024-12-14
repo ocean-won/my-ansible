@@ -1,0 +1,6 @@
+- amazon.aws.s3_bucket_info:
+  register: result
+
+- name: List buckets
+  ansible.builtin.debug:
+    msg: "{{ result['buckets'] }}"
