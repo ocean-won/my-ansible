@@ -1,12 +1,10 @@
 ---
-- name: Get-Timezone
+- name: Get-Timezone using win_shell
   hosts: all
   gather_facts: false
   tasks:
     - name: Get-Timezone
-      ansible.builtin.powershell:
-        script: |
-          Get-Timezone
+      win_shell: Get-Timezone
       register: timezone
     - name: Print timezone output
       debug:
