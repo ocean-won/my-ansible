@@ -9,28 +9,28 @@
         } else {
           Write-Output "not installed"
         }
-      register: 7zip_status
+      register: SevenZip_status
       changed_when: no
 
     - name: Debug installation status
       debug:
-        msg: "7Zip installation status: {{ 7zip_status.stdout | trim }}"
+        msg: "7Zip installation status: {{ SevenZip_status.stdout | trim }}"
 
     - name: Copy 7Zip installer to Windows server
       win_copy:
         src: "files/7z2409-x64.msi"  # 프로젝트 경로 기준
         dest: "C:\\Temp\\7z2409-x64.msi"
-      when: 7zip_status.stdout | trim == "not installed"
+      when: SevenZip_status.stdout | trim == "not installed"
 
     - name: Install 7Zip
       win_shell: |
         Start-Process -FilePath "msiexec.exe" -ArgumentList '/i "C:\Temp\7z2409-x64.msi" /quiet /norestart' -NoNewWindow -Wait
       args:
         executable: powershell
-      when: 7zip_status.stdout | trim == "not installed"
+      when: SevenZip_status.stdout | trim == "not installed"
 
     - name: Remove installer after installation
       win_file:
         path: "C:\\Temp\\7z2409-x64.msi"
         state: absent
-      when: 7zip_status.stdout | trim == "not installed"
+      when: SevenZip_status.stdout | trim == "not installed"
