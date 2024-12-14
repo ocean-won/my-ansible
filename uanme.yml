@@ -1,0 +1,13 @@
+---
+# playbook.yml
+- name: Execute uname -a on all hosts
+  hosts: all
+  gather_facts: no  # facts 수집을 비활성화 (필요 없는 경우)
+  tasks:
+    - name: Run uname -a
+      command: uname -a
+      register: result  # 결과를 저장
+
+    - name: Print uname output
+      debug:
+        msg: "{{ result.stdout }}"  # 명령의 출력값 표시
