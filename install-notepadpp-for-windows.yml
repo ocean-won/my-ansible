@@ -1,0 +1,36 @@
+---
+- name: Install Notepad++ from local project files
+  hosts: all
+  tasks:
+    - name: Check if Notepad++ is already installed
+      win_shell: |
+        if (Test-Path "C:\Program Files\Notepad++\notepad++.exe") {
+          Write-Output "installed"
+        } else {
+          Write-Output "not installed"
+        }
+      register: notepadpp_status
+      changed_when: no
+
+    - name: Debug installation status
+      debug:
+        msg: "Notepad++ installation status: {{ notepadpp_status.stdout }}"
+
+    - name: Copy Notepad++ installer to Windows server
+      win_copy:
+        src: "files/npp.8.7.4.Installer.x64.exe"
+        dest: "C:\\Temp\\npp.8.7.4.Installer.x64.exe"
+      when: notepadpp_status.stdout == "not installed"
+
+    - name: Install Notepad++
+      win_shell: |
+        Start-Process -FilePath "C:\Temp\npp.8.7.4.Installer.x64.exe" -ArgumentList "/S" -Wait
+      args:
+        executable: powershell
+      when: notepadpp_status.stdout == "not installed"
+
+    - name: Remove installer after installation
+      win_file:
+        path: "C:\\Temp\\npp.8.7.4.Installer.x64.exe"
+        state: absent
+      when: notepadpp_status.stdout == "not installed"
