@@ -1,4 +1,4 @@
-- name: List S3 buckets using AWS CLI
+- name: List VPC AWS CLI
   hosts: 10.88.88.103
   gather_facts: yes
   vars:
@@ -11,10 +11,10 @@
         export AWS_ACCESS_KEY_ID="{{ AccessKey }}"
         export AWS_SECRET_ACCESS_KEY="{{ SecretKey }}"
         export AWS_DEFAULT_REGION="{{ Region }}"
-        aws s3 ls
-      register: s3_bucket_list
+        aws ec2 describe-vpcs --query "Vpcs[]" --output table
+      register: vpc_list
       changed_when: no
 
-    - name: Display S3 bucket list
+    - name: Display VPC list
       ansible.builtin.debug:
-        var: s3_bucket_list.stdout
+        var: vpc_list.stdout
