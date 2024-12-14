@@ -1,0 +1,36 @@
+---
+- name: Install Visual Studio Code for Windows PC
+  hosts: all
+  tasks:
+    - name: Check if Visual Studio Code is already installed
+      win_shell: |
+        if (Test-Path "C:\Program Files\Microsoft VS Code\Code.exe") {
+          Write-Output "installed"
+        } else {
+          Write-Output "not installed"
+        }
+      register: vscode_status
+      changed_when: no
+
+    - name: Debug installation status
+      debug:
+        msg: "VS Code installation status: {{ vscode_status.stdout }}"
+
+    - name: Download VS Code installer
+      win_get_url:
+        url: "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user"
+        dest: "C:\\Temp\\VSCodeSetup.exe"
+      when: vscode_status.stdout == "not installed"
+
+    - name: Install VS Code
+      win_shell: |
+        Start-Process -FilePath "C:\Temp\VSCodeSetup.exe" -ArgumentList "/silent /mergetasks=!runcode" -Wait
+      args:
+        executable: powershell
+      when: vscode_status.stdout == "not installed"
+
+    - name: Remove installer after installation
+      win_file:
+        path: "C:\\Temp\\VSCodeSetup.exe"
+        state: absent
+      when: vscode_status.stdout == "not installed"
