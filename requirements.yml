@@ -1,3 +1,5 @@
 collections:
   - name: linuxhq.aws
+    source: https://galaxy.ansible.com
   - name: community.aws
+    source: https://galaxy.ansible.com
