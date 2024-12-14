@@ -1,7 +1,6 @@
 - name: List S3 buckets using AWS CLI
   hosts: 10.88.88.103
-  gather_facts: no
-  become: yes
+  gather_facts: yes
   vars:
     AccessKey: "{{ survey_AccessKey }}"
     SecretKey: "{{ survey_SecretKey }}"
