@@ -1,22 +1,7 @@
 - name: Temp 디렉터리 체크
   hosts: all
   tasks:
-    - name: Ensure c:\temp is a directory
+    - name: Ensure c:\Temp is a directory
       ansible.builtin.win_file:
-        path: C:\temp
+        path: C:\Temp
         state: directory
-    # - name: Check if directory exists
-    #   ansible.builtin.win_stat:
-    #     path: C:\Temp
-    #   register: temp_dir_status
-
-    # - name: Debug directory status
-    #   ansible.builtin.debug:
-    #     msg: >
-    #       Directory exists: {{ temp_dir_status.stat.exists | default(false) }}
-
-    # - name: Create directory if it does not exist
-    #   ansible.builtin.win_file:
-    #     path: C:\Temp
-    #     state: directory
-    #   when: not temp_dir_status.stat.exists
